@@ -1,0 +1,254 @@
+{
+	"info": {
+		"_postman_id": "ee06a326-767a-4808-b527-57b519916cb4",
+		"name": "QAAUTORUN external file : Signup+edit profile",
+		"description": "For Run use the folowing:\n\n1\\. Signup with file data.csv\n\n2\\. Signup+Сhange profile with file data1.csv",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20538761",
+		"_collection_link": "https://www.postman.com/irina44/workspace/my-workspace/collection/20538761-ee06a326-767a-4808-b527-57b519916cb4?action=share&source=collection_link&creator=20538761"
+	},
+	"item": [
+		{
+			"name": "Signup validation tests data.csv Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"qaautoName\", pm.iterationData.get(\"qaautoName\"));\r",
+							"pm.environment.set(\"qaautoLastName\", pm.iterationData.get(\"qaautoLastName\"));\r",
+							"pm.environment.set(\"qaautoEmail\", pm.iterationData.get(\"qaautoEmail\"));\r",
+							"pm.environment.set(\"qaautoPassword\", pm.iterationData.get(\"qaautoPassword\"));\r",
+							"pm.environment.set(\"qaautoRepeatPwd\", pm.iterationData.get(\"qaautoRepeatPwd\"));\r",
+							"\r",
+							"var requestBody = {\r",
+							"    \"name\": pm.variables.get(\"qaautoName\"),\r",
+							"    \"lastName\": pm.variables.get(\"qaautoLastName\"),\r",
+							"    \"email\": pm.variables.get(\"qaautoEmail\"),\r",
+							"    \"password\": pm.variables.get(\"qaautoPassword\"),\r",
+							"    \"repeatPassword\": pm.variables.get(\"qaautoRepeatPwd\")\r",
+							"};\r",
+							"\r",
+							"pm.variables.set(\"body\", JSON.stringify(requestBody));\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"var qaautoName = pm.iterationData.get(\"qaautoName\");\r",
+							"\r",
+							"pm.test(\"Check user creation with data \" + qaautoName, function () {  \r",
+							"    pm.expect(jsonData.status).to.eql(\"ok\");\r",
+							"    \r",
+							"    // if the first test passed, skip other tests\r",
+							"    if (jsonData.status === \"ok\") {\r",
+							"        pm.test.skip(\"Skipping additional tests since user creation was successful\");\r",
+							"    } else {\r",
+							"        // Add more assertions as needed for the first test\r",
+							"        pm.expect(jsonData).to.have.property('someProperty', 'someValue');\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful json schema\", function () {\r",
+							"    pm.expect(jsonData).to.have.property('status', 'error');\r",
+							"    pm.expect(jsonData).to.have.property('message');\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Successful message\", function () {\r",
+							"    if (\r",
+							"        response.message === \"User already exists\" ||\r",
+							"        response.message === \"Email is incorrect\" ||\r",
+							"        response.message === \"\\\"email\\\" is not allowed to be empty\" ||\r",
+							"        response.message === \"Passwords do not match\" ||\r",
+							"        response.message === \"Password has to be from 8 to 15 characters long and contain at least one integer, one capital, and one small letter\" ||\r",
+							"        response.message === \"\\\"password\\\" is not allowed to be empty\" ||\r",
+							"        response.message === \"Name is invalid\" ||\r",
+							"        response.message === \"\\\"name\\\" is not allowed to be empty\" ||\r",
+							"        response.message === \"Name has to be from 2 to 20 characters long\" ||\r",
+							"        response.message === \"Last Name has to be from 2 to 20 characters long\" ||\r",
+							"        response.message === \"\\\"lastName\\\" is not allowed to be empty\"\r",
+							"    ) {\r",
+							"        pm.expect(true).to.be.true;\r",
+							"    } else {\r",
+							"        pm.expect.fail(\"Message is wrong\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"{{qaautoName}}\",\r\n  \"lastName\": \"{{qaautoLastName}}\",\r\n  \"email\": \"{{qaautoEmail}}\",\r\n  \"password\": \"{{qaautoPassword}}\",\r\n  \"repeatPassword\": \"{{qaautoRepeatPwd}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{qaautourl}}/api/auth/signup",
+					"host": [
+						"{{qaautourl}}"
+					],
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Change users profile (Data1.csv) Copy",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"//console.log(\"Response Body:\", jsonData);\r",
+							"\r",
+							"var expectedName = pm.iterationData.get(\"qaautoName\");\r",
+							"var expectedLastName = pm.iterationData.get(\"qaautoLastName\");\r",
+							"var expectedPhoto = pm.iterationData.get(\"qaautoPhoto\");\r",
+							"var expectedDateBirth = pm.iterationData.get(\"qaautoDateBirth\");\r",
+							"var expectedCountry = pm.iterationData.get(\"qaautoCountry\");\r",
+							"\r",
+							"pm.test(\"Validate profile update\", function () {\r",
+							"    pm.expect(jsonData.status).to.eql(\"ok\");\r",
+							"    pm.expect(jsonData).to.have.property('data');\r",
+							"\r",
+							"   \r",
+							"    if ('data' in jsonData) {\r",
+							"       \r",
+							"        if ('name' in jsonData.data) {\r",
+							"            pm.expect(jsonData.data.name).to.eql(expectedName);\r",
+							"        } else {\r",
+							"            pm.expect.fail(\"Property 'name' not found in the 'data' object\");\r",
+							"        }\r",
+							"\r",
+							"        \r",
+							"        if ('lastName' in jsonData.data) {\r",
+							"            pm.expect(jsonData.data.lastName).to.eql(expectedLastName);\r",
+							"        } else {\r",
+							"            pm.expect.fail(\"Property 'lastName' not found in the 'data' object\");\r",
+							"        }\r",
+							"\r",
+							"        \r",
+							"        if ('photoFilename' in jsonData.data) {\r",
+							"            pm.expect(jsonData.data.photoFilename).to.eql(expectedPhoto);\r",
+							"        } else {\r",
+							"            pm.expect.fail(\"Property 'photoFilename' not found in the 'data' object\");\r",
+							"        }\r",
+							"\r",
+							"        \r",
+							"        if ('dateBirth' in jsonData.data) {\r",
+							"            pm.expect(jsonData.data.dateBirth).to.eql(expectedDateBirth);\r",
+							"        } else {\r",
+							"            pm.expect.fail(\"Property 'dateBirth' not found in the 'data' object\");\r",
+							"        }\r",
+							"\r",
+							"       \r",
+							"        if ('country' in jsonData.data) {\r",
+							"            pm.expect(jsonData.data.country).to.eql(expectedCountry);\r",
+							"        } else {\r",
+							"            pm.expect.fail(\"Property 'country' not found in the 'data' object\");\r",
+							"        }\r",
+							"    }\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"photo\": \"{{qaautoPhoto}}\",\r\n  \"name\": \"{{qaautoName}}\",\r\n  \"lastName\": \"{{qaautoLastName}}\",\r\n  \"dateBirth\": \"{{qaautoDateBirth}}\",\r\n  \"country\": \"{{qaautoCountry}}\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{qaautourl}}/api/users/profile",
+					"host": [
+						"{{qaautourl}}"
+					],
+					"path": [
+						"api",
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "qaautourl",
+			"value": "https://qauto.forstudy.space",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "qaautourl",
+			"value": "https://qauto2.forstudy.space",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
